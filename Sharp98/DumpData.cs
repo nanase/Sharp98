@@ -96,7 +96,7 @@ namespace Sharp98
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
 
-            if (buffer.Length <= 1 || buffer.Length > 6)
+            if (buffer.Length <= 1)
                 throw new ArgumentOutOfRangeException(nameof(buffer));
 
             if (buffer[0] < 0x80)
@@ -105,8 +105,8 @@ namespace Sharp98
                 return new DumpData(buffer[0], 0, 0, 0);
             else if (buffer[0] == 0xfe)
             {
-                var array = new byte[buffer.Length - 1];
-                Array.Copy(buffer, 1, array, 0, buffer.Length - 1);
+                var array = new byte[5];
+                Array.Copy(buffer, 1, array, 0, 5);
                 return new DumpData(buffer[0], 0, 0, GetVVValue(array));
             }
             else

@@ -122,7 +122,13 @@ namespace Sharp98
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
 
-            int arrayLength = array.Length;
+            int arrayLength = 1;
+
+            for (int i = 0; i < array.Length; i++)
+                if (array[i] >= 128)
+                    arrayLength++;
+                else
+                    break;
 
             if (arrayLength < 1)
                 throw new ArgumentOutOfRangeException(nameof(array));
@@ -130,11 +136,11 @@ namespace Sharp98
             if (arrayLength > 5)
                 throw new OverflowException();
 
-            if (array[arrayLength - 1] < 128)
+            if (array[arrayLength - 1] >= 128)
                 throw new ArgumentOutOfRangeException(nameof(array));
 
             if (arrayLength == 1)
-                return array[0] & 0x7f + 2;
+                return (array[0] & 0x7f) + 2;
             else if (arrayLength == 2)
                 return (array[1] & 0x7f) << 7 + (array[0] & 0x7f) + 2;
             else if (arrayLength == 3)
@@ -160,15 +166,15 @@ namespace Sharp98
             value -= 2;
 
             if (value < 128)
-                return new[] { (byte)(value & 0x7f + 128) };
+                return new[] { (byte)(value & 0x7f) };
             else if (value < 16384)
-                return new[] { (byte)(value & 0x7f), (byte)((value >> 7) & 0x7f + 128) };
+                return new[] { (byte)(value & 0x7f + 128), (byte)((value >> 7) & 0x7f) };
             else if (value < 2097151)
-                return new[] { (byte)(value & 0x7f), (byte)((value >> 7) & 0x7f), (byte)((value >> 14) & 0x7f + 128) };
+                return new[] { (byte)(value & 0x7f + 128), (byte)((value >> 7) & 0x7f + 128), (byte)((value >> 14) & 0x7f) };
             else if (value < 268435456)
-                return new[] { (byte)(value & 0x7f), (byte)((value >> 7) & 0x7f), (byte)((value >> 14) & 0x7f), (byte)((value >> 21) & 0x7f + 128) };
+                return new[] { (byte)(value & 0x7f + 128), (byte)((value >> 7) & 0x7f + 128), (byte)((value >> 14) & 0x7f + 128), (byte)((value >> 21) & 0x7f) };
             else
-                return new[] { (byte)(value & 0x7f), (byte)((value >> 7) & 0x7f), (byte)((value >> 14) & 0x7f), (byte)((value >> 21) & 0x7f), (byte)((value >> 28) & 0x07 + 128) };
+                return new[] { (byte)(value & 0x7f + 128), (byte)((value >> 7) & 0x7f + 128), (byte)((value >> 14) & 0x7f + 128), (byte)((value >> 21) & 0x7f + 128), (byte)((value >> 28) & 0x07) };
         }
 
         #endregion

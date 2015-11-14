@@ -188,7 +188,7 @@ namespace Sharp98
                     }
                 }
 
-                if (import[start] == 0x00)
+                if (start < import.Length && import[start] == 0x00)
                     start++;
 
                 if (key == null || value == null)

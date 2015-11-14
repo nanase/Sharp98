@@ -84,15 +84,17 @@ namespace Sharp98
             : base()
         {
             CheckMarker(import);
-            var encoding = (IsEncodedByUTF8(import) ? Encoding.UTF8 : Encoding.Default);
-            this.Import(import, encoding, marker.Length + preamble.Length);
+            var isUTF8 = IsEncodedByUTF8(import);
+            var encoding = (isUTF8 ? Encoding.UTF8 : Encoding.Default);
+            this.Import(import, encoding, marker.Length + (isUTF8 ? preamble.Length : 0));
         }
 
         public TagCollection(byte[] import, Encoding encoding)
             : base()
         {
             CheckMarker(import);
-            this.Import(import, encoding, marker.Length);
+            var isUTF8 = (encoding == Encoding.UTF8);
+            this.Import(import, encoding, marker.Length + (isUTF8 ? preamble.Length : 0));
         }
 
         public TagCollection(IDictionary<string, string> dictionary)

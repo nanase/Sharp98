@@ -74,8 +74,8 @@ namespace Sharp98
             var output = new byte[16];
 
             Array.Copy(((uint)this.Type).GetLEByte(), 0, output, 0, 4);
-            Array.Copy(this.Clock.GetLEByte(), 0, output, 0, 4);
-            Array.Copy(((uint)this.Pan).GetLEByte(), 0, output, 0, 4);
+            Array.Copy(this.Clock.GetLEByte(), 0, output, 4, 4);
+            Array.Copy(((uint)this.Pan).GetLEByte(), 0, output, 8, 4);
 
             return output;
         }
@@ -94,8 +94,8 @@ namespace Sharp98
 
             return new DeviceInfo(
                 (DeviceType)buffer.GetLEUInt32(0),
-                buffer.GetLEUInt32(0),
-                (PanFlag)buffer.GetLEUInt32(0));
+                buffer.GetLEUInt32(4),
+                (PanFlag)buffer.GetLEUInt32(8));
         }
 
         #endregion

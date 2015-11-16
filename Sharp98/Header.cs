@@ -61,6 +61,8 @@ namespace Sharp98
 
         public int LoopPointDumpIndex { get; private set; }
 
+        public IReadOnlyList<DumpData> DumpData { get; private set; }
+
         public TagCollection Tag { get; private set; }
 
         public IReadOnlyList<DeviceInfo> Device { get; private set; }

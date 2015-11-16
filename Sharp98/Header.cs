@@ -66,5 +66,25 @@ namespace Sharp98
         public IReadOnlyList<DeviceInfo> Device { get; private set; }
 
         #endregion
+
+        #region -- Constructors --
+
+        public Header(
+            uint timerInfo,
+            uint timerInfo2,
+            int loopIndex,
+            IReadOnlyList<DumpData> dump,
+            TagCollection tag,
+            IReadOnlyList<DeviceInfo> device)
+        {
+            this.TimerInfo = timerInfo;
+            this.TimerInfo2 = timerInfo2;
+            this.LoopPointDumpIndex = loopIndex;
+            this.DumpData = dump;
+            this.Tag = tag;
+            this.Device = device;
+        }
+
+        #endregion
     }
 }

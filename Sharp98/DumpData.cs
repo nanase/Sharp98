@@ -117,45 +117,57 @@ namespace Sharp98
 
         #region -- Private Static Methods --
 
-        private static int GetVVValue(byte[] array)
+        private static int GetVVValue(byte[] array, int index = 0)
         {
+            // S98v3 掲載の算出コードから取得方法を類推
+            // 最大値は Int32.MaxValue として取り扱う (2,147,483,645 - 2)
+            // 返却値の範囲: 2 - 2,147,483,645
+            
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
 
-            int arrayLength = 1;
+            if (index < 0 || array.Length <= index)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
-            for (int i = 0; i < array.Length; i++)
-                if (array[i] >= 128)
-                    arrayLength++;
-                else
-                    break;
+            int res, current;
 
-            if (arrayLength < 1)
-                throw new ArgumentOutOfRangeException(nameof(array));
+            // 1st byte
+            current = array[index++];
+            res = current & 0x7f;
+            if (current >= 128)
+                return res + 2;
 
-            if (arrayLength > 5)
-                throw new OverflowException();
+            // 2nd byte
+            current = array[index++];
+            res += (current & 0x7f) << 7;
+            if (current < 128)
+                return res + 2;
 
-            if (array[arrayLength - 1] >= 128)
-                throw new ArgumentOutOfRangeException(nameof(array));
+            // 3rd byte
+            current = array[index++];
+            res += (current & 0x7f) << 14;
+            if (current < 128)
+                return res + 2;
 
-            if (arrayLength == 1)
-                return (array[0] & 0x7f) + 2;
-            else if (arrayLength == 2)
-                return (array[1] & 0x7f) << 7 + (array[0] & 0x7f) + 2;
-            else if (arrayLength == 3)
-                return (array[2] & 0x7f) << 14 + (array[1] & 0x7f) << 7 + (array[0] & 0x7f) + 2;
-            else if (arrayLength == 4)
-                return (array[3] & 0x7f) << 21 + (array[2] & 0x7f) << 14 + (array[1] & 0x7f) << 7 + (array[0] & 0x7f) + 2;
-            else
+            // 4th byte
+            current = array[index++];
+            res += (current & 0x7f) << 21;
+            if (current < 128)
+                return res + 2;
+
+            // 5th byte
+            current = array[index++];
+            res += (current & 0x7f) << 28;
+            if (current < 128)
             {
-                int value = (array[4] & 0x07) << 28 + (array[3] & 0x7f) << 21 + (array[2] & 0x7f) << 14 + (array[1] & 0x7f) << 7 + (array[0] & 0x7f);
-                
-                if (value > 2147483645)
+                if (res > 2147483645 || res < 0)
                     throw new OverflowException();
-                
-                return value + 2;
+                else
+                    return res + 2;
             }
+
+            // 6th byte or more
+            throw new OverflowException();
         }
 
         private static byte[] GetVVArray(int value)

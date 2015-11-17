@@ -47,11 +47,11 @@ namespace Sharp98
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
 
-            if (array.Length != 4)
+            if (index < 0 || array.Length < index + 4)
                 throw new ArgumentOutOfRangeException(nameof(array));
 
             if (!BitConverter.IsLittleEndian)
-                Array.Reverse(array);
+                Array.Reverse(array, index, 4);
 
             return BitConverter.ToUInt32(array, index);
         }

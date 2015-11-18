@@ -84,18 +84,18 @@ namespace Sharp98
 
         #region -- Public Static Methods --
 
-        public static DeviceInfo Import(byte[] buffer)
+        public static DeviceInfo Import(byte[] buffer, int index = 0)
         {
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
 
-            if (buffer.Length <= 16)
+            if (buffer.Length <= index + 16)
                 throw new ArgumentOutOfRangeException(nameof(buffer));
 
             return new DeviceInfo(
-                (DeviceType)buffer.GetLEUInt32(0),
-                buffer.GetLEUInt32(4),
-                (PanFlag)buffer.GetLEUInt32(8));
+                (DeviceType)buffer.GetLEUInt32(index + 0),
+                buffer.GetLEUInt32(index + 4),
+                (PanFlag)buffer.GetLEUInt32(index + 8));
         }
 
         #endregion

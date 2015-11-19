@@ -89,8 +89,8 @@ namespace Sharp98
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
 
-            if (buffer.Length <= index + 16)
-                throw new ArgumentOutOfRangeException(nameof(buffer));
+            if (index < 0 || buffer.Length <= index + 16)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             return new DeviceInfo(
                 (DeviceType)buffer.GetLEUInt32(index + 0),

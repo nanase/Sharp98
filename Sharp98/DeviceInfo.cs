@@ -60,6 +60,15 @@ namespace Sharp98
 
         public DeviceInfo(DeviceType type, uint clock, PanFlag pan)
         {
+            if (!Enum.IsDefined(typeof(DeviceType), type))
+                throw new ArgumentOutOfRangeException(nameof(type));
+
+            if (clock == 0)
+                throw new ArgumentOutOfRangeException(nameof(clock));
+
+            if (!Enum.IsDefined(typeof(PanFlag), pan))
+                throw new ArgumentOutOfRangeException(nameof(pan));
+            
             this.type = type;
             this.clock = clock;
             this.pan = pan;

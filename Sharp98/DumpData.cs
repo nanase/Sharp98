@@ -58,6 +58,9 @@ namespace Sharp98
 
         public DumpData(byte op, byte address, byte data, int syncWaitTime)
         {
+            if (syncWaitTime < 2)
+                throw new ArgumentOutOfRangeException(nameof(syncWaitTime));
+
             this.op = op;
             this.address = address;
             this.data = data;

@@ -52,21 +52,7 @@ namespace Sharp98
             }
             set
             {
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
-
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-
-                if (key.Contains("\n"))
-                    throw new ArgumentException($"パラメータ '{nameof(key)}' に改行文字 0x0A を含むことはできません.");
-
-                if (key.Contains("="))
-                    throw new ArgumentException($"パラメータ '{nameof(key)}' に文字 '=' を含むことはできません.");
-
-                if (value.Contains("\n"))
-                    throw new ArgumentException($"パラメータ '{nameof(value)}' に改行文字 0x0A を含むことはできません.");
-
+                CheckKeyValue(key, value);
                 base[key.ToLower()] = value;
             }
         }
@@ -110,21 +96,7 @@ namespace Sharp98
 
         public new void Add(string key, string value)
         {
-            if (key == null)
-                throw new ArgumentNullException(nameof(key));
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            if (key.Contains("\n"))
-                throw new ArgumentException($"パラメータ '{nameof(key)}' に改行文字 0x0A を含むことはできません.");
-
-            if (key.Contains("="))
-                throw new ArgumentException($"パラメータ '{nameof(key)}' に文字 '=' を含むことはできません.");
-
-            if (value.Contains("\n"))
-                throw new ArgumentException($"パラメータ '{nameof(value)}' に改行文字 0x0A を含むことはできません.");
-            
+            CheckKeyValue(key, value);
             base.Add(key.ToLower(), value);
         }
 
@@ -203,6 +175,27 @@ namespace Sharp98
         #endregion
 
         #region -- Private Static Methods --
+
+        private static void CheckKeyValue(string key, string value)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (key.Length == 0)
+                throw new ArgumentException($"パラメータ '{nameof(key)}' に空の文字列を指定することはできません.");
+
+            if (key.Contains("\n"))
+                throw new ArgumentException($"パラメータ '{nameof(key)}' に改行文字 0x0A を含むことはできません.");
+
+            if (key.Contains("="))
+                throw new ArgumentException($"パラメータ '{nameof(key)}' に文字 '=' を含むことはできません.");
+
+            if (value.Contains("\n"))
+                throw new ArgumentException($"パラメータ '{nameof(value)}' に改行文字 0x0A を含むことはできません.");
+        }
 
         private static void CheckMarker(byte[] import)
         {

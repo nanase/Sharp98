@@ -83,6 +83,24 @@ namespace Sharp98
             TagCollection tag,
             IReadOnlyList<DeviceInfo> device)
         {
+            if (timerInfo == 0)
+                throw new ArgumentOutOfRangeException(nameof(timerInfo));
+
+            if (timerInfo2 == 0)
+                throw new ArgumentOutOfRangeException(nameof(timerInfo2));
+            
+            if (dump == null)
+                throw new ArgumentNullException(nameof(dump));
+
+            if (tag == null)
+                throw new ArgumentNullException(nameof(tag));
+
+            if (device == null)
+                throw new ArgumentNullException(nameof(device));
+
+            if (loopIndex < -1 || loopIndex >= dump.Count)
+                throw new ArgumentNullException(nameof(loopIndex));
+
             this.TimerInfo = timerInfo;
             this.TimerInfo2 = timerInfo2;
             this.LoopPointDumpIndex = loopIndex;

@@ -42,13 +42,43 @@ namespace Sharp98
             return array;
         }
 
-        public static uint GetLEUInt32(this byte[] array, int index = 0)
+        public static void GetLEByte(this uint value, byte[] array, int index = 0)
         {
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
 
             if (index < 0 || array.Length < index + 4)
                 throw new ArgumentOutOfRangeException(nameof(array));
+
+            unsafe
+            {
+                byte* vptr = (byte*)&value;
+
+                if (BitConverter.IsLittleEndian)
+                {
+                    array[index++] = *(vptr++);
+                    array[index++] = *(vptr++);
+                    array[index++] = *(vptr++);
+                }
+                else
+                {
+                    index += 3;
+                    array[index--] = *(vptr++);
+                    array[index--] = *(vptr++);
+                    array[index--] = *(vptr++);
+                }
+
+                array[index] = *vptr;
+            }
+        }
+
+        public static uint GetLEUInt32(this byte[] array, int index = 0)
+        {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+
+            if (index < 0 || array.Length < index + 4)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             if (!BitConverter.IsLittleEndian)
                 Array.Reverse(array, index, 4);

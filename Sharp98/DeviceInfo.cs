@@ -78,15 +78,17 @@ namespace Sharp98
 
         #region -- Public Methods --
 
-        public byte[] Export()
+        public void Export(byte[] buffer, int index = 0)
         {
-            var output = new byte[16];
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
 
-            Array.Copy(((uint)this.Type).GetLEByte(), 0, output, 0, 4);
-            Array.Copy(this.Clock.GetLEByte(), 0, output, 4, 4);
-            Array.Copy(((uint)this.Pan).GetLEByte(), 0, output, 8, 4);
+            if (index < 0 || buffer.Length < index + 16)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
-            return output;
+            ((uint)this.Type).GetLEByte(buffer, index);
+            this.Clock.GetLEByte(buffer, index + 4);
+            ((uint)this.Pan).GetLEByte(buffer, index + 8);
         }
 
         #endregion

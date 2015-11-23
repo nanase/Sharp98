@@ -72,19 +72,25 @@ namespace Sharp98
 
         #region -- Public Methods --
 
-        public byte[] Export()
+        public int Export(byte[] buffer, int index = 0)
         {
             if (this.op < 0x80)
-                return new[] { this.op, this.address, this.data };
+            {
+                buffer[index++] = this.op;
+                buffer[index++] = this.address;
+                buffer[index] = this.data;
+                return 3;
+            }
             else if (this.op == 0xfd || this.op == 0xff)
-                return new[] { this.op };
+            {
+                buffer[index] = this.op;
+                return 1;
+            }
             else if (this.op == 0xfe)
             {
-                var vv = GetVVArray(this.sync_wait_time);
-                var array = new byte[vv.Length + 1];
-                vv[0] = this.op;
-                Array.Copy(vv, 0, array, 1, vv.Length);
-                return array;
+                buffer[0] = this.op;
+                int vvlength = GetVVArray(this.sync_wait_time, buffer, 1);
+                return vvlength + 1;
             }
             else
                 throw new InvalidOperationException();
@@ -179,7 +185,7 @@ namespace Sharp98
                 throw new ArgumentOutOfRangeException(nameof(value));
 
             value -= 2;
-
+            
             // 1st byte : 0 - 127
             buffer[index] = (byte)(value & 0x7f);
             if (value < 128)

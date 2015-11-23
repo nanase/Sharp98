@@ -173,23 +173,40 @@ namespace Sharp98
             throw new OverflowException();
         }
 
-        private static byte[] GetVVArray(int value)
+        private static int GetVVArray(int value, byte[] buffer, int index = 0)
         {
             if (value < 2)
                 throw new ArgumentOutOfRangeException(nameof(value));
 
             value -= 2;
 
+            // 1st byte : 0 - 127
+            buffer[index] = (byte)(value & 0x7f);
             if (value < 128)
-                return new[] { (byte)(value & 0x7f) };
-            else if (value < 16384)
-                return new[] { (byte)(value & 0x7f + 128), (byte)((value >> 7) & 0x7f) };
-            else if (value < 2097151)
-                return new[] { (byte)(value & 0x7f + 128), (byte)((value >> 7) & 0x7f + 128), (byte)((value >> 14) & 0x7f) };
-            else if (value < 268435456)
-                return new[] { (byte)(value & 0x7f + 128), (byte)((value >> 7) & 0x7f + 128), (byte)((value >> 14) & 0x7f + 128), (byte)((value >> 21) & 0x7f) };
-            else
-                return new[] { (byte)(value & 0x7f + 128), (byte)((value >> 7) & 0x7f + 128), (byte)((value >> 14) & 0x7f + 128), (byte)((value >> 21) & 0x7f + 128), (byte)((value >> 28) & 0x07) };
+                return 1;
+
+            // 2nd byte : 128 - 16383
+            buffer[index] += 128;
+            buffer[++index] = (byte)((value >> 7) & 0x7f);
+            if (value < 16384)
+                return 2;
+
+            // 3nd byte : 16384 - 2097150
+            buffer[index] += 128;
+            buffer[++index] = (byte)((value >> 14) & 0x7f);
+            if (value < 2097152)
+                return 3;
+
+            // 4th byte : 2097151 - 268435456
+            buffer[index] += 128;
+            buffer[++index] = (byte)((value >> 21) & 0x7f);
+            if (value < 268435456)
+                return 4;
+
+            // 5th byte : 2097151 - 268435456
+            buffer[index] += 128;
+            buffer[++index] = (byte)((value >> 28) & 0x07);
+            return 5;
         }
 
         #endregion

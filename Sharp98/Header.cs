@@ -111,6 +111,52 @@ namespace Sharp98
 
         #endregion
 
+        #region -- Public Methods --
+        
+        public void Export(Stream stream)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (!stream.CanWrite)
+                throw new InvalidOperationException("書き込みのできないストリームに書き込もうとしました.");
+
+            if (!stream.CanSeek)
+                throw new InvalidOperationException("シークのできないストリームに書き込もうとしました.");
+
+            if (this.Device.Count > 64)
+                throw new InvalidOperationException("デバイス数は 64 個以下である必要があります.");
+
+            long basePosition = stream.Position;
+            long loopPosition, tagPosition;
+
+            this.ExportHeader(stream);
+            this.ExportDevice(stream);
+            this.ExportDump(stream, out loopPosition);
+
+            if (this.Tag.Count == 0)
+                tagPosition = 0L;
+            else
+            {
+                tagPosition = stream.Position;
+                ExportTag(stream);
+            }
+
+            long endPosition = stream.Position;
+            var buffer = new byte[8];
+            ((uint)tagPosition).GetLEByte(buffer, 0);
+            ((uint)loopPosition).GetLEByte(buffer, 4);
+
+            stream.Seek(basePosition + 0x10L, SeekOrigin.Begin);
+            stream.Write(buffer, 0, 4);
+            stream.Seek(basePosition + 0x18L, SeekOrigin.Begin);
+            stream.Write(buffer, 4, 4);
+
+            stream.Seek(endPosition, SeekOrigin.Begin);
+        }
+
+        #endregion
+
         #region -- Public Static Methods --
 
         public static Header Import(Stream stream)
@@ -222,6 +268,72 @@ namespace Sharp98
             tagCollection = new TagCollection(tagBuffer);
 
             return new Header(timerInfo, timerInfo2, loop_index, dumpData, tagCollection, di);
+        }
+
+        #endregion
+
+        #region -- Private Methods --
+
+        private void ExportHeader(Stream stream)
+        {
+            var buffer = new byte[32];
+
+            // Magic Number
+            Array.Copy(magicNumber, 0, buffer, 0, 3);
+
+            // Format Version
+            buffer[3] = (byte)'3';
+
+            // Timer Info
+            (this.TimerInfo == 0 ? DefaultNumerator : this.TimerInfo).GetLEByte(buffer, 4);
+
+            // Timer Info2
+            (this.TimerInfo2 == 0 ? DefaultDenominator : this.TimerInfo2).GetLEByte(buffer, 8);
+
+            // Compressing == 0
+            // File Offset to Dump Data
+            (this.Device.Count == 0 ? 32 : 32 + 16 * (uint)this.Device.Count).GetLEByte(buffer, 20);
+
+            // Device Count
+            (this.Device.Count == 0 ? 0 : (uint)this.Device.Count).GetLEByte(buffer, 28);
+            stream.Write(buffer, 0, 32);
+        }
+
+        private void ExportDevice(Stream stream)
+        {
+            var buffer = new byte[16];
+
+            foreach (var device in this.Device)
+            {
+                device.Export(buffer);
+                stream.Write(buffer, 0, 16);
+            }
+        }
+
+        private void ExportDump(Stream stream, out long loopPosition)
+        {
+            var buffer = new byte[6];
+            var dumpCount = 0;
+
+            // 0 means no loop
+            loopPosition = 0L;
+
+            foreach (var dump in this.DumpData)
+            {
+                if (this.LoopPointDumpIndex == dumpCount)
+                    loopPosition = stream.Position;
+
+                int dumpLength = dump.Export(buffer);
+                stream.Write(buffer, 0, dumpLength);
+
+                dumpCount++;
+            }
+        }
+
+        private void ExportTag(Stream stream)
+        {
+            var buffer = this.Tag.Export(System.Text.Encoding.GetEncoding(932));
+            stream.Write(buffer, 0, buffer.Length);
         }
 
         #endregion

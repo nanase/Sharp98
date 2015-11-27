@@ -30,22 +30,66 @@ using System;
 
 namespace Sharp98
 {
+    /// <summary>
+    /// モノラルデバイスに対する出力チャネルの出力を表す列挙体です。
+    /// この列挙体はフラグとして使用できます。
+    /// </summary>
     [Flags]
     public enum PanFlag : uint
     {
+        /// <summary>
+        /// デバイスはステレオ出力されます。
+        /// </summary>
         Stereo = 0,
 
+        /// <summary>
+        /// デバイスはチャネル 1 の左がミュートされます。
+        /// </summary>
         CH1Left = 1,
+
+        /// <summary>
+        /// デバイスはチャネル 1 の右がミュートされます。
+        /// </summary>
         CH1Right = 2,
 
+        /// <summary>
+        /// デバイスはチャネル 2 の左がミュートされます。
+        /// </summary>
         CH2Left = 4,
 
+        /// <summary>
+        /// デバイスはチャネル 2 の右がミュートされます。
+        /// </summary>
         CH2Right = 8,
+
+        /// <summary>
+        /// デバイスはチャネル 3 の左がミュートされます。
+        /// </summary>
         CH3Left = 16,
+
+        /// <summary>
+        /// デバイスはチャネル 4 の右がミュートされます。
+        /// </summary>
         CH4Right = 32,
+
+        /// <summary>
+        /// デバイスは FM チャネルの左がミュートされます。
+        /// </summary>
         FMLeft = 64,
+
+        /// <summary>
+        /// デバイスは FM チャネルの右がミュートされます。
+        /// </summary>
         FMRight = 128,
+
+        /// <summary>
+        /// デバイスは左チャネルがミュートされます。
+        /// </summary>
         Left = 1,
+
+        /// <summary>
+        /// デバイスは右チャネルがミュートされます。
+        /// </summary>
         Right = 2,
     }
 }

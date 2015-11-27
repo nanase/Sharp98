@@ -37,14 +37,14 @@ namespace Sharp98
 
         CH1Left = 1,
         CH1Right = 2,
-        CH2Left = 3,
-        CH2Right = 4,
-        CH3Left = 5,
-        CH4Right = 6,
 
-        FMLeft = 7,
-        FMRight = 8,
+        CH2Left = 4,
 
+        CH2Right = 8,
+        CH3Left = 16,
+        CH4Right = 32,
+        FMLeft = 64,
+        FMRight = 128,
         Left = 1,
         Right = 2,
     }

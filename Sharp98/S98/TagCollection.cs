@@ -107,21 +107,41 @@ namespace Sharp98.S98
 
         public byte[] Export(Encoding encoding)
         {
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
+
             using (MemoryStream ms = new MemoryStream())
             {
-                ms.Write(marker, 0, marker.Length);
-
-                if (encoding == Encoding.UTF8)
-                    ms.Write(preamble, 0, preamble.Length);
-
-
-                foreach (var item in this)
-                {
-                    var buf = encoding.GetBytes(string.Format("{0}={1}\n\0", item.Key.ToLower(), item.Value));
-                    ms.Write(buf, 0, buf.Length);
-                }
-
+                this.Export(ms, encoding);
                 return ms.ToArray();
+            }
+        }
+
+        public void Export(Stream stream)
+        {
+            this.Export(stream, Encoding.UTF8);
+        }
+
+        public void Export(Stream stream, Encoding encoding)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
+
+            if (!stream.CanWrite)
+                throw new InvalidOperationException("書き込みできないストリームが指定されました.");
+
+            stream.Write(marker, 0, marker.Length);
+
+            if (encoding == Encoding.UTF8)
+                stream.Write(preamble, 0, preamble.Length);
+            
+            foreach (var item in this)
+            {
+                var buf = encoding.GetBytes(string.Format("{0}={1}\n\0", item.Key.ToLower(), item.Value));
+                stream.Write(buf, 0, buf.Length);
             }
         }
 

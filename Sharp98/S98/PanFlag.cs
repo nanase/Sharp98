@@ -28,7 +28,7 @@
 
 using System;
 
-namespace Sharp98
+namespace Sharp98.S98
 {
     /// <summary>
     /// モノラルデバイスに対する出力チャネルの出力を表す列挙体です。

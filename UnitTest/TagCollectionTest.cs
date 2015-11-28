@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sharp98;
+using Sharp98.S98;
 
 namespace UnitTest
 {

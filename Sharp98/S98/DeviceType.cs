@@ -26,7 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace Sharp98
+namespace Sharp98.S98
 {
     /// <summary>
     /// 対象デバイスを識別するための列挙体です。

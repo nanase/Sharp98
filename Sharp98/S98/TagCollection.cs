@@ -31,7 +31,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Sharp98
+namespace Sharp98.S98
 {
     public class TagCollection : Dictionary<string, string>
     {

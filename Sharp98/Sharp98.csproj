@@ -36,14 +36,14 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DumpData.cs" />
-    <Compile Include="DeviceInfo.cs" />
-    <Compile Include="Header.cs" />
+    <Compile Include="S98\DumpData.cs" />
+    <Compile Include="S98\DeviceInfo.cs" />
+    <Compile Include="S98\Header.cs" />
     <Compile Include="IntegerExtend.cs" />
-    <Compile Include="PanFlag.cs" />
-    <Compile Include="DeviceType.cs" />
+    <Compile Include="S98\PanFlag.cs" />
+    <Compile Include="S98\DeviceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TagCollection.cs" />
+    <Compile Include="S98\TagCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

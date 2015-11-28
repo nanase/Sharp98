@@ -30,7 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Sharp98
+namespace Sharp98.S98
 {
     public class Header
     {
@@ -243,7 +243,7 @@ namespace Sharp98
                 else if (buffer_int == 0xfd)
                 {
                     stream.Read(buffer, 0, 1);
-                    dumpData.Add(Sharp98.DumpData.Import(buffer));
+                    dumpData.Add(S98.DumpData.Import(buffer));
                     break;
                 }
                 else if (buffer_int == 0xfe)
@@ -259,7 +259,7 @@ namespace Sharp98
                 else
                     throw new InvalidDataException();
 
-                dumpData.Add(Sharp98.DumpData.Import(buffer));
+                dumpData.Add(S98.DumpData.Import(buffer));
             }
 
             stream.Seek(tag, SeekOrigin.Begin);

@@ -28,7 +28,7 @@
 
 using System;
 
-namespace Sharp98
+namespace Sharp98.S98
 {
     public struct DeviceInfo
     {

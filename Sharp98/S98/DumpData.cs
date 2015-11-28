@@ -28,7 +28,7 @@
 
 using System;
 
-namespace Sharp98
+namespace Sharp98.S98
 {
     public struct DumpData
     {
@@ -37,8 +37,14 @@ namespace Sharp98
         private readonly byte op;
         private readonly byte address;
         private readonly byte data;
-        private readonly byte reserved;
         private readonly int sync_wait_time;
+
+#pragma warning disable 414 
+
+        // unused, but reserved
+        private readonly byte reserved;
+
+#pragma warning restore 414
 
         #endregion
 

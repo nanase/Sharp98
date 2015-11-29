@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Sharp98.S98
 {
@@ -139,7 +140,7 @@ namespace Sharp98.S98
             else
             {
                 tagPosition = stream.Position;
-                ExportTag(stream);
+                ExportTag(stream, encoding);
             }
 
             long endPosition = stream.Position;
@@ -348,10 +349,12 @@ namespace Sharp98.S98
             }
         }
 
-        private void ExportTag(Stream stream)
+        private void ExportTag(Stream stream, Encoding encoding)
         {
-            var buffer = this.Tag.Export(System.Text.Encoding.GetEncoding(932));
-            stream.Write(buffer, 0, buffer.Length);
+            if (encoding == null)
+                this.Tag.Export(stream);
+            else
+                this.Tag.Export(stream, encoding);
         }
 
         #endregion

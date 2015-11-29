@@ -190,7 +190,7 @@ namespace Sharp98.S98
             if (!CheckMagicAndVersion(buffer, 0))
                 throw new InvalidDataException("不明なファイル形式、またはバージョンです.");
 
-            if ((tag < dump) || (tag > stream.Length))
+            if ((tag < dump) || (tag >= stream.Length))
                 throw new InvalidDataException("タグ情報のオフセットが範囲外です.");
 
             if (dump > stream.Length)

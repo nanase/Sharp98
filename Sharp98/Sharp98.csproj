@@ -39,7 +39,7 @@
     <Compile Include="S98\DumpData.cs" />
     <Compile Include="S98\DeviceInfo.cs" />
     <Compile Include="S98\Header.cs" />
-    <Compile Include="IntegerExtend.cs" />
+    <Compile Include="Utils\IntegerExtend.cs" />
     <Compile Include="S98\PanFlag.cs" />
     <Compile Include="S98\DeviceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

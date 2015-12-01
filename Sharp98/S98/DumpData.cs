@@ -94,8 +94,8 @@ namespace Sharp98.S98
             }
             else if (this.op == 0xfe)
             {
-                buffer[0] = this.op;
-                int vvlength = GetVVArray(this.sync_wait_time, buffer, 1);
+                buffer[index] = this.op;
+                int vvlength = GetVVArray(this.sync_wait_time, buffer, index + 1);
                 return vvlength + 1;
             }
             else

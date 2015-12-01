@@ -149,7 +149,7 @@ namespace Sharp98.S98
             // 1st byte
             current = array[index++];
             res = current & 0x7f;
-            if (current >= 128)
+            if (current < 128)
                 return res + 2;
 
             // 2nd byte

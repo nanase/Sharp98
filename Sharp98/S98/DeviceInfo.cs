@@ -27,14 +27,16 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
+using System.Text;
 
 namespace Sharp98.S98
 {
-    public struct DeviceInfo
+    public struct DeviceInfo : IDeviceInfo
     {
         #region -- Public Fields --
 
-        public static readonly DeviceInfo DefaultDevice = new DeviceInfo(DeviceType.OPNA, 7987200, PanFlag.Stereo);
+        public static readonly DeviceInfo DefaultDevice = new DeviceInfo(S98.DeviceType.OPNA, 7987200, PanFlag.Stereo);
 
         #endregion
 
@@ -48,11 +50,13 @@ namespace Sharp98.S98
 
         #region -- Public Properties --
 
-        public DeviceType Type { get { return this.type; } }
+        public DeviceType S98DeviceType => this.type;
 
+        public Sharp98.DeviceType DeviceType => this.type.FromS98Device();
 
-        public PanFlag Pan { get { return this.pan; } }
         public int Clock => this.clock;
+
+        public PanFlag Pan => this.pan;
 
         #endregion
 
@@ -65,10 +69,10 @@ namespace Sharp98.S98
 
             if (clock == 0 || clock > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(clock));
-
+            
             if (!Enum.IsDefined(typeof(PanFlag), pan))
                 throw new ArgumentOutOfRangeException(nameof(pan));
-            
+
             this.type = type;
             this.clock = (int)clock;
             this.pan = pan;
@@ -89,6 +93,24 @@ namespace Sharp98.S98
             ((uint)this.S98DeviceType).GetLEByte(buffer, index);
             ((uint)this.Clock).GetLEByte(buffer, index + 4);
             ((uint)this.Pan).GetLEByte(buffer, index + 8);
+        }
+        
+        public void Export(Stream stream)
+        {
+            this.Export(stream, null);
+        }
+
+        public void Export(Stream stream, Encoding encoding)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (!stream.CanWrite)
+                throw new InvalidOperationException("書き込みのできないストリームが指定されました.");
+
+            var buffer = new byte[16];
+            this.Export(buffer);
+            stream.Write(buffer, 0, 16);
         }
 
         #endregion

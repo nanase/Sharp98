@@ -27,10 +27,13 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
+using System.Text;
+using Sharp98.DataParameter;
 
 namespace Sharp98.S98
 {
-    public struct DumpData
+    public struct DumpData : IDumpData
     {
         #region -- Private Info --
 
@@ -51,6 +54,46 @@ namespace Sharp98.S98
         #region -- Public Properties --
 
         public byte Operator { get { return this.op; } }
+        public DataType DataType
+        {
+            get
+            {
+                if (this.op < 64)
+                    return DataType.AddressAndData;
+                else if (this.op == 0xff || this.op == 0xfe)
+                    return DataType.Wait;
+                else if (this.op == 0xfd)
+                    return DataType.EndMarker;
+                else
+                    return DataType.Unknown;
+            }
+        }
+
+        public int TargetDevice
+        {
+            get
+            {
+                if (this.op < 64)
+                    return this.op / 2;
+                else
+                    return -1;
+            }
+        }
+
+        public object Parameter
+        {
+            get
+            {
+                if (this.op < 64)
+                    return new AddressAndData(this.address, this.data);
+                else if (this.op == 0xff)
+                    return 1;
+                else if (this.op == 0xfe)
+                    return this.sync_wait_time;
+                else
+                    return null;
+            }
+        }
 
         public byte Address { get { return this.address; } }
 
@@ -97,6 +140,38 @@ namespace Sharp98.S98
                 buffer[index] = this.op;
                 int vvlength = GetVVArray(this.sync_wait_time, buffer, index + 1);
                 return vvlength + 1;
+            }
+            else
+                throw new InvalidOperationException();
+        }
+
+        public void Export(Stream stream)
+        {
+            this.Export(stream, null);
+        }
+
+        public void Export(Stream stream, Encoding encoding)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            if (!stream.CanWrite)
+                throw new InvalidOperationException("書き込みのできないストリームが指定されました.");
+
+            stream.WriteByte(this.op);
+
+            if (this.op < 0x80)
+            {
+                stream.WriteByte(this.address);
+                stream.WriteByte(this.data);
+            }
+            else if (this.op == 0xfd || this.op == 0xff)
+                return;
+            else if (this.op == 0xfe)
+            {
+                var buffer = new byte[5];
+                int vvlength = GetVVArray(this.sync_wait_time, buffer, 0);
+                stream.Write(buffer, 0, 5);
             }
             else
                 throw new InvalidOperationException();

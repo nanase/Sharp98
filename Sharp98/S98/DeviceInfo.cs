@@ -41,7 +41,7 @@ namespace Sharp98.S98
         #region -- Private Info --
 
         private readonly DeviceType type;
-        private readonly uint clock;
+        private readonly int clock;
         private readonly PanFlag pan;
 
         #endregion
@@ -50,9 +50,9 @@ namespace Sharp98.S98
 
         public DeviceType Type { get { return this.type; } }
 
-        public uint Clock { get { return this.clock; } }
 
         public PanFlag Pan { get { return this.pan; } }
+        public int Clock => this.clock;
 
         #endregion
 
@@ -63,14 +63,14 @@ namespace Sharp98.S98
             if (!Enum.IsDefined(typeof(DeviceType), type))
                 throw new ArgumentOutOfRangeException(nameof(type));
 
-            if (clock == 0)
+            if (clock == 0 || clock > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(clock));
 
             if (!Enum.IsDefined(typeof(PanFlag), pan))
                 throw new ArgumentOutOfRangeException(nameof(pan));
             
             this.type = type;
-            this.clock = clock;
+            this.clock = (int)clock;
             this.pan = pan;
         }
 
@@ -86,8 +86,8 @@ namespace Sharp98.S98
             if (index < 0 || buffer.Length < index + 16)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            ((uint)this.Type).GetLEByte(buffer, index);
-            this.Clock.GetLEByte(buffer, index + 4);
+            ((uint)this.S98DeviceType).GetLEByte(buffer, index);
+            ((uint)this.Clock).GetLEByte(buffer, index + 4);
             ((uint)this.Pan).GetLEByte(buffer, index + 8);
         }
 

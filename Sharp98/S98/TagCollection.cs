@@ -33,7 +33,7 @@ using System.Text;
 
 namespace Sharp98.S98
 {
-    public class TagCollection : Dictionary<string, string>
+    public class TagCollection : Dictionary<string, string>, ITagCollection
     {
         #region -- Private Fields --
 

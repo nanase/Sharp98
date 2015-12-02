@@ -53,7 +53,6 @@ namespace Sharp98.S98
 
         #region -- Public Properties --
 
-        public byte Operator { get { return this.op; } }
         public DataType DataType
         {
             get
@@ -95,11 +94,13 @@ namespace Sharp98.S98
             }
         }
 
-        public byte Address { get { return this.address; } }
+        public byte Operator => this.op;
 
-        public byte Data { get { return this.data; } }
+        public byte Address => this.address;
 
-        public int SyncWaitTime { get { return this.sync_wait_time; } }
+        public byte Data => this.data;
+
+        public int SyncWaitTime => this.sync_wait_time;
 
         #endregion
 

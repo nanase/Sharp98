@@ -49,6 +49,14 @@ namespace Sharp98.S98
 
         #endregion
 
+        #region -- Private Fields --
+
+        private readonly IReadOnlyList<DumpData> s98DumpData;
+        private readonly IReadOnlyList<DeviceInfo> s98Devices;
+        private readonly TagCollection s98TagCollection;
+
+        #endregion
+
         #region -- Public Properties --
 
         public uint TimerInfo { get; private set; }
@@ -66,11 +74,13 @@ namespace Sharp98.S98
 
         public int LoopPointDumpIndex { get; private set; }
 
-        public IReadOnlyList<DumpData> DumpData { get; private set; }
+        public IReadOnlyList<DumpData> S98DumpData => this.s98DumpData;
 
-        public TagCollection Tag { get; private set; }
+        public IReadOnlyList<DeviceInfo> S98Devices => this.s98Devices;
 
-        public IReadOnlyList<DeviceInfo> Device { get; private set; }
+        public TagCollection S98TagCollection => this.s98TagCollection;
+
+
 
         #endregion
 
@@ -82,7 +92,7 @@ namespace Sharp98.S98
             int loopIndex,
             IReadOnlyList<DumpData> dump,
             TagCollection tag,
-            IReadOnlyList<DeviceInfo> device)
+            IReadOnlyList<DeviceInfo> devices)
         {
             if (timerInfo == 0)
                 throw new ArgumentOutOfRangeException(nameof(timerInfo));
@@ -96,8 +106,8 @@ namespace Sharp98.S98
             if (tag == null)
                 throw new ArgumentNullException(nameof(tag));
 
-            if (device == null)
-                throw new ArgumentNullException(nameof(device));
+            if (devices == null)
+                throw new ArgumentNullException(nameof(devices));
 
             if (loopIndex < -1 || loopIndex >= dump.Count)
                 throw new ArgumentNullException(nameof(loopIndex));
@@ -105,9 +115,9 @@ namespace Sharp98.S98
             this.TimerInfo = timerInfo;
             this.TimerInfo2 = timerInfo2;
             this.LoopPointDumpIndex = loopIndex;
-            this.DumpData = dump;
-            this.Tag = tag;
-            this.Device = device;
+            this.s98DumpData = dump;
+            this.s98TagCollection = tag;
+            this.s98Devices = devices;
         }
 
         #endregion
@@ -125,7 +135,7 @@ namespace Sharp98.S98
             if (!stream.CanSeek)
                 throw new InvalidOperationException("シークのできないストリームに書き込もうとしました.");
 
-            if (this.Device.Count > 64)
+            if (this.s98Devices.Count > 64)
                 throw new InvalidOperationException("デバイス数は 64 個以下である必要があります.");
 
             long basePosition = stream.Position;
@@ -135,7 +145,7 @@ namespace Sharp98.S98
             this.ExportDevice(stream);
             this.ExportDump(stream, out loopPosition);
 
-            if (this.Tag.Count == 0)
+            if (this.s98TagCollection.Count == 0)
                 tagPosition = 0L;
             else
             {
@@ -238,10 +248,10 @@ namespace Sharp98.S98
 
             // Compressing == 0
             // File Offset to Dump Data
-            (this.Device.Count == 0 ? 32 : 32 + 16 * (uint)this.Device.Count).GetLEByte(buffer, 20);
+            (this.s98Devices.Count == 0 ? 32 : 32 + 16 * (uint)this.s98Devices.Count).GetLEByte(buffer, 20);
 
             // Device Count
-            (this.Device.Count == 0 ? 0 : (uint)this.Device.Count).GetLEByte(buffer, 28);
+            (this.s98Devices.Count == 0 ? 0 : (uint)this.s98Devices.Count).GetLEByte(buffer, 28);
             stream.Write(buffer, 0, 32);
         }
 
@@ -322,7 +332,7 @@ namespace Sharp98.S98
         {
             var buffer = new byte[16];
 
-            foreach (var device in this.Device)
+            foreach (var device in this.s98Devices)
             {
                 device.Export(buffer);
                 stream.Write(buffer, 0, 16);
@@ -337,7 +347,7 @@ namespace Sharp98.S98
             // 0 means no loop
             loopPosition = 0L;
 
-            foreach (var dump in this.DumpData)
+            foreach (var dump in this.s98DumpData)
             {
                 if (this.LoopPointDumpIndex == dumpCount)
                     loopPosition = stream.Position;
@@ -352,9 +362,9 @@ namespace Sharp98.S98
         private void ExportTag(Stream stream, Encoding encoding)
         {
             if (encoding == null)
-                this.Tag.Export(stream);
+                this.s98TagCollection.Export(stream);
             else
-                this.Tag.Export(stream, encoding);
+                this.s98TagCollection.Export(stream, encoding);
         }
 
         #endregion

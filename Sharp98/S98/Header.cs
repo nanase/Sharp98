@@ -94,10 +94,10 @@ namespace Sharp98.S98
             TagCollection tag,
             IReadOnlyList<DeviceInfo> devices)
         {
-            if (timerInfo == 0)
+            if (timerInfo == 0 || timerInfo > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(timerInfo));
 
-            if (timerInfo2 == 0)
+            if (timerInfo2 == 0 || timerInfo2 > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(timerInfo2));
             
             if (dump == null)

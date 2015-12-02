@@ -289,7 +289,7 @@ namespace Sharp98.S98
         {
             int buffer_int;
             var dumpData = new List<DumpData>();
-            loop_index = 0;
+            loop_index = -1;
 
             while (true)
             {

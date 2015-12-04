@@ -33,7 +33,7 @@ using System.Text;
 
 namespace Sharp98.S98
 {
-    public class Header
+    public class Header : IFileHeader
     {
         #region -- Private Static Fields --
 
@@ -59,20 +59,22 @@ namespace Sharp98.S98
 
         #region -- Public Properties --
 
-        public uint TimerInfo { get; private set; }
+        public FileType FileType => FileType.S98;
 
-        public uint TimerInfo2 { get; private set; }
+        public int SampleTimeNumerator { get; private set; }
 
-        public double SyncTime
+        public int SampleTimeDenominator { get; private set; }
+
+        public double SampleTime
         {
             get
             {
-                return (double)(this.TimerInfo == 0 ? DefaultNumerator : this.TimerInfo) /
-                    (double)(this.TimerInfo2 == 0 ? DefaultDenominator : this.TimerInfo2);
+                return (double)(this.SampleTimeNumerator == 0 ? DefaultNumerator : this.SampleTimeNumerator) /
+                    (double)(this.SampleTimeDenominator == 0 ? DefaultDenominator : this.SampleTimeDenominator);
             }
         }
 
-        public int LoopPointDumpIndex { get; private set; }
+        public int LoopPointIndex { get; private set; }
 
         public IReadOnlyList<DumpData> S98DumpData => this.s98DumpData;
 
@@ -80,8 +82,12 @@ namespace Sharp98.S98
 
         public TagCollection S98TagCollection => this.s98TagCollection;
 
+        public IReadOnlyList<IDumpData> DumpData => new CastedReadOnlyList<DumpData, IDumpData>(this.s98DumpData);
 
+        public ITagCollection TagCollection => this.s98TagCollection;
 
+        public IReadOnlyList<IDeviceInfo> Devices => new CastedReadOnlyList<DeviceInfo, IDeviceInfo>(this.s98Devices);
+        
         #endregion
 
         #region -- Constructors --
@@ -99,7 +105,7 @@ namespace Sharp98.S98
 
             if (timerInfo2 == 0 || timerInfo2 > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(timerInfo2));
-            
+
             if (dump == null)
                 throw new ArgumentNullException(nameof(dump));
 
@@ -112,9 +118,9 @@ namespace Sharp98.S98
             if (loopIndex < -1 || loopIndex >= dump.Count)
                 throw new ArgumentNullException(nameof(loopIndex));
 
-            this.TimerInfo = timerInfo;
-            this.TimerInfo2 = timerInfo2;
-            this.LoopPointDumpIndex = loopIndex;
+            this.SampleTimeNumerator = (int)timerInfo;
+            this.SampleTimeDenominator = (int)timerInfo2;
+            this.LoopPointIndex = loopIndex;
             this.s98DumpData = dump;
             this.s98TagCollection = tag;
             this.s98Devices = devices;
@@ -123,8 +129,13 @@ namespace Sharp98.S98
         #endregion
 
         #region -- Public Methods --
-        
+
         public void Export(Stream stream)
+        {
+            this.Export(stream, null);
+        }
+
+        public void Export(Stream stream, Encoding encoding)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -170,7 +181,7 @@ namespace Sharp98.S98
 
         #region -- Public Static Methods --
 
-        public static Header Import(Stream stream)
+        public static Header Import(Stream stream, Encoding encoding = null)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -182,7 +193,6 @@ namespace Sharp98.S98
                 throw new InvalidOperationException("シークができないストリームが指定されました.");
 
             var buffer = new byte[32];
-            byte[] tagBuffer;
             int loop_index = 0;
             DeviceInfo[] di;
             TagCollection tagCollection;
@@ -209,19 +219,13 @@ namespace Sharp98.S98
 
             if ((loop > stream.Length) || (loop != 0 && loop < dump))
                 throw new InvalidDataException("ループ位置のオフセットが範囲外です.");
-            
+
             if (device_count > 64)
                 throw new InvalidDataException("デバイス数が 64 個を超えています.");
-            
+
             di = ImportDevice(device_count, stream, buffer);
-            
-            stream.Seek(dump, SeekOrigin.Begin);
-            dumpData = ImportDump(stream, loop, out loop_index, buffer);
-            
-            stream.Seek(tag, SeekOrigin.Begin);
-            tagBuffer = new byte[stream.Length - tag];
-            stream.Read(tagBuffer, 0, tagBuffer.Length);
-            tagCollection = new TagCollection(tagBuffer);
+            dumpData = ImportDump(stream, dump, loop, out loop_index, buffer);
+            tagCollection = ImportTag(stream, tag, encoding);
 
             return new Header(timerInfo, timerInfo2, loop_index, dumpData, tagCollection, di);
         }
@@ -241,10 +245,10 @@ namespace Sharp98.S98
             buffer[3] = (byte)'3';
 
             // Timer Info
-            (this.TimerInfo == 0 ? DefaultNumerator : this.TimerInfo).GetLEByte(buffer, 4);
+            ((uint)(this.SampleTimeNumerator == 0 ? DefaultNumerator : this.SampleTimeNumerator)).GetLEByte(buffer, 4);
 
             // Timer Info2
-            (this.TimerInfo2 == 0 ? DefaultDenominator : this.TimerInfo2).GetLEByte(buffer, 8);
+            ((uint)(this.SampleTimeDenominator == 0 ? DefaultDenominator : this.SampleTimeDenominator)).GetLEByte(buffer, 8);
 
             // Compressing == 0
             // File Offset to Dump Data
@@ -285,11 +289,13 @@ namespace Sharp98.S98
             }
         }
 
-        private static IReadOnlyList<DumpData> ImportDump(Stream stream, uint loop_offset, out int loop_index, byte[] buffer)
+        private static IReadOnlyList<DumpData> ImportDump(Stream stream, uint dump_offset, uint loop_offset, out int loop_index, byte[] buffer)
         {
             int buffer_int;
             var dumpData = new List<DumpData>();
             loop_index = -1;
+
+            stream.Seek(dump_offset, SeekOrigin.Begin);
 
             while (true)
             {
@@ -328,6 +334,25 @@ namespace Sharp98.S98
             return dumpData;
         }
 
+        private static TagCollection ImportTag(Stream stream, uint tag_offset, Encoding encoding)
+        {
+            if (tag_offset == 0)
+            {
+                return new TagCollection();
+            }
+            else
+            {
+                stream.Seek(tag_offset, SeekOrigin.Begin);
+                var tagBuffer = new byte[stream.Length - tag_offset];
+                stream.Read(tagBuffer, 0, tagBuffer.Length);
+
+                if (encoding == null)
+                    return new TagCollection(tagBuffer);
+                else
+                    return new TagCollection(tagBuffer, encoding);
+            }
+        }
+
         private void ExportDevice(Stream stream)
         {
             var buffer = new byte[16];
@@ -349,7 +374,7 @@ namespace Sharp98.S98
 
             foreach (var dump in this.s98DumpData)
             {
-                if (this.LoopPointDumpIndex == dumpCount)
+                if (this.LoopPointIndex == dumpCount)
                     loopPosition = stream.Position;
 
                 int dumpLength = dump.Export(buffer);

@@ -37,7 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataParameter\AddressAndData.cs" />
-    <Compile Include="Interface\FileType.cs" />
+    <Compile Include="Interface\FormatType.cs" />
     <Compile Include="Interface\DataType.cs" />
     <Compile Include="Interface\DeviceType.cs" />
     <Compile Include="Interface\IDumpData.cs" />

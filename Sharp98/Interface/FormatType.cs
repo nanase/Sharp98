@@ -1,5 +1,5 @@
 ﻿//
-// FileType.cs
+// FormatType.cs
 //
 // Author:
 //       Tomona Nanase <nanase@users.noreply.github.com>
@@ -28,7 +28,7 @@
 
 namespace Sharp98
 {
-    public enum FileType
+    public enum FormatType
     {
         Unknown,
 

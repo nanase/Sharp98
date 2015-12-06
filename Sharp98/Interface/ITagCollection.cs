@@ -30,7 +30,10 @@ using System.Collections.Generic;
 
 namespace Sharp98
 {
-    public interface ITagCollection : IDictionary<string, string>, IExportable
+    /// <summary>
+    /// タグを保持するためのインタフェースです。
+    /// </summary>
+    public interface ITagCollection : IDictionary<string, string>, IExportable, IBufferExportable
     {
     }
 }

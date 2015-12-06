@@ -45,7 +45,7 @@
     <Compile Include="Interface\IBufferExportable.cs" />
     <Compile Include="Interface\IFileExportable.cs" />
     <Compile Include="Interface\IExportable.cs" />
-    <Compile Include="Interface\IFileHeader.cs" />
+    <Compile Include="Interface\IFormatHeader.cs" />
     <Compile Include="Interface\ITagCollection.cs" />
     <Compile Include="S98\DeviceTypeConverter.cs" />
     <Compile Include="S98\DumpData.cs" />

@@ -1,5 +1,5 @@
 ﻿//
-// IFileHeader.cs
+// IFormatHeader.cs
 //
 // Author:
 //       Tomona Nanase <nanase@users.noreply.github.com>
@@ -26,15 +26,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 
 namespace Sharp98
 {
-    public interface IFileHeader : IExportable
+    public interface IFormatHeader : IExportable, IFileExportable
     {
         #region -- Properties --
 
-        FileType FileType { get; }
+        FormatType FormatType { get; }
 
         int SampleTimeNumerator { get; }
 

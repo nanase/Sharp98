@@ -28,7 +28,7 @@
 
 namespace Sharp98
 {
-    public interface IDeviceInfo : IExportable
+    public interface IDeviceInfo : IExportable, IBufferExportable
     {
         #region -- Methods --
 

@@ -28,7 +28,7 @@
 
 namespace Sharp98
 {
-    public interface IDumpData : IExportable
+    public interface IDumpData : IExportable, IBufferExportable
     {
         #region -- Methods --
 

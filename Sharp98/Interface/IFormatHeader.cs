@@ -35,6 +35,8 @@ namespace Sharp98
     {
         #region -- Properties --
 
+        Version Version { get; }
+
         FormatType FormatType { get; }
 
         int SampleTimeNumerator { get; }

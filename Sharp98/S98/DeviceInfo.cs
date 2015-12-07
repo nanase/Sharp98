@@ -82,7 +82,7 @@ namespace Sharp98.S98
 
         #region -- Public Methods --
 
-        public void Export(byte[] buffer, int index = 0)
+        public int Export(byte[] buffer, int index, int length, Encoding encoding)
         {
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
@@ -90,14 +90,11 @@ namespace Sharp98.S98
             if (index < 0 || buffer.Length < index + 16)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            ((uint)this.S98DeviceType).GetLEByte(buffer, index);
-            ((uint)this.Clock).GetLEByte(buffer, index + 4);
-            ((uint)this.Pan).GetLEByte(buffer, index + 8);
-        }
-        
-        public void Export(Stream stream)
-        {
-            this.Export(stream, null);
+            if (length < 16)
+                throw new ArgumentOutOfRangeException(nameof(length), "バッファの長さが足りません。少なくとも 16 の長さが必要です。");
+
+            this.ExportBuffer(buffer, index);
+            return 16;
         }
 
         public void Export(Stream stream, Encoding encoding)
@@ -109,8 +106,20 @@ namespace Sharp98.S98
                 throw new InvalidOperationException("書き込みのできないストリームが指定されました.");
 
             var buffer = new byte[16];
-            this.Export(buffer);
+            this.Export(buffer, 0, 16, null);
             stream.Write(buffer, 0, 16);
+        }
+
+        #endregion
+
+        #region -- Private Methods --
+
+        private void ExportBuffer(byte[] buffer, int index)
+        {
+            ((uint)this.S98DeviceType).GetLEByte(buffer, index);
+            ((uint)this.Clock).GetLEByte(buffer, index + 4);
+            ((uint)this.Pan).GetLEByte(buffer, index + 8);
+            Array.Clear(buffer, index + 12, 4);
         }
 
         #endregion

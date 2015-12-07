@@ -146,11 +146,6 @@ namespace Sharp98.S98
                 throw new InvalidOperationException();
         }
 
-        public void Export(Stream stream)
-        {
-            this.Export(stream, null);
-        }
-
         public void Export(Stream stream, Encoding encoding)
         {
             if (stream == null)

@@ -82,6 +82,13 @@ namespace Sharp98.S98
 
         #region -- Public Methods --
 
+        public byte[] Export(Encoding encoding)
+        {
+            var buffer = new byte[16];
+            this.ExportBuffer(buffer, 0);
+            return buffer;
+        }
+
         public int Export(byte[] buffer, int index, int length, Encoding encoding)
         {
             if (buffer == null)

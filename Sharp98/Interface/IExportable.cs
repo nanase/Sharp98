@@ -35,8 +35,6 @@ namespace Sharp98
     {
         #region -- Methods --
 
-        void Export(Stream stream);
-
         void Export(Stream stream, Encoding encoding);
 
         #endregion

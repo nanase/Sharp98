@@ -122,26 +122,29 @@ namespace Sharp98.S98
 
         #region -- Public Methods --
 
-        public int Export(byte[] buffer, int index = 0)
+        public int Export(byte[] buffer, int index, int length, Encoding encoding)
         {
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
+
+            if (index < 0 || buffer.Length < index + 6)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            if (length < 6)
+                throw new ArgumentOutOfRangeException(nameof(length), "バッファの長さが足りません。少なくとも 6 の長さが必要です。");
+
+            buffer[index] = this.op;
+
             if (this.op < 0x80)
             {
-                buffer[index++] = this.op;
-                buffer[index++] = this.address;
-                buffer[index] = this.data;
+                buffer[++index] = this.address;
+                buffer[++index] = this.data;
                 return 3;
             }
             else if (this.op == 0xfd || this.op == 0xff)
-            {
-                buffer[index] = this.op;
                 return 1;
-            }
             else if (this.op == 0xfe)
-            {
-                buffer[index] = this.op;
-                int vvlength = GetVVArray(this.sync_wait_time, buffer, index + 1);
-                return vvlength + 1;
-            }
+                return GetVVArray(this.sync_wait_time, buffer, index + 1) + 1;
             else
                 throw new InvalidOperationException();
         }

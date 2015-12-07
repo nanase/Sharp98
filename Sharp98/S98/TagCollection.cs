@@ -149,41 +149,41 @@ namespace Sharp98.S98
 
         #region -- Private Methods --
 
-        private void Import(byte[] import, Encoding encoding, int offset)
+        private void Import(byte[] import, Encoding encoding, int index)
         {
-            int start = offset;
+            int currentIndex = index;
 
-            while (start < import.Length)
+            while (currentIndex < import.Length)
             {
                 string key = null;
                 string value = null;
 
                 // key
-                for (int i = start; i < import.Length; i++)
+                for (int i = currentIndex; i < import.Length; i++)
                 {
                     if (import[i] == 0x3d)
                     {
-                        key = encoding.GetString(import, start, i - start);
+                        key = encoding.GetString(import, currentIndex, i - currentIndex);
                         i++;
-                        start = i;
+                        currentIndex = i;
                         break;
                     }
                 }
 
                 // value
-                for (int i = start; i < import.Length; i++)
+                for (int i = currentIndex; i < import.Length; i++)
                 {
                     if (import[i] == 0x0a)
                     {
-                        value = encoding.GetString(import, start, i - start);
+                        value = encoding.GetString(import, currentIndex, i - currentIndex);
                         i++;
-                        start = i;
+                        currentIndex = i;
                         break;
                     }
                 }
 
-                if (start < import.Length && import[start] == 0x00)
-                    start++;
+                if (currentIndex < import.Length && import[currentIndex] == 0x00)
+                    currentIndex++;
 
                 if (key == null || value == null)
                     throw new InvalidDataException();

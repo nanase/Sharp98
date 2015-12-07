@@ -195,11 +195,7 @@ namespace Sharp98.S98
             else if (buffer[0] == 0xfd || buffer[0] == 0xff)
                 return new DumpData(buffer[0], 0, 0, 0);
             else if (buffer[0] == 0xfe)
-            {
-                var array = new byte[5];
-                Array.Copy(buffer, 1, array, 0, 5);
-                return new DumpData(buffer[0], 0, 0, GetVVValue(array));
-            }
+                return new DumpData(buffer[0], 0, 0, GetVVValue(buffer, 1));
             else
                 throw new InvalidOperationException();
         }
@@ -208,7 +204,7 @@ namespace Sharp98.S98
 
         #region -- Private Static Methods --
 
-        private static int GetVVValue(byte[] array, int index = 0)
+        private static int GetVVValue(byte[] array, int index)
         {
             // S98v3 掲載の算出コードから取得方法を類推
             // 最大値は Int32.MaxValue として取り扱う (2,147,483,645 - 2)
@@ -261,7 +257,26 @@ namespace Sharp98.S98
             throw new OverflowException();
         }
 
-        private static int GetVVArray(int value, byte[] buffer, int index = 0)
+        private static int GetVVLength(int value)
+        {
+            if (value < 2)
+                throw new ArgumentOutOfRangeException(nameof(value));
+
+            value -= 2;
+
+            if (value < 128)
+                return 1;
+            else if (value < 16384)
+                return 2;
+            else if (value < 2097152)
+                return 3;
+            else if (value < 268435456)
+                return 4;
+            else
+                return 5;
+        }
+
+        private static int GetVVArray(int value, byte[] buffer, int index)
         {
             if (value < 2)
                 throw new ArgumentOutOfRangeException(nameof(value));

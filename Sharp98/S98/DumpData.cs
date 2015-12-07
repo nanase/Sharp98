@@ -122,6 +122,23 @@ namespace Sharp98.S98
 
         #region -- Public Methods --
 
+        public byte[] Export(Encoding encoding)
+        {
+            if (this.op < 0x80)
+                return new byte[3] { this.op, this.address, this.data };
+            else if (this.op == 0xfd || this.op == 0xff)
+                return new byte[1] { this.op };
+            else if (this.op == 0xfe)
+            {
+                var buffer = new byte[GetVVLength(this.sync_wait_time) + 1];
+                buffer[0] = this.op;
+                GetVVArray(this.sync_wait_time, buffer, 1);
+                return buffer;
+            }
+            else
+                throw new InvalidOperationException();
+        }
+
         public int Export(byte[] buffer, int index, int length, Encoding encoding)
         {
             if (buffer == null)

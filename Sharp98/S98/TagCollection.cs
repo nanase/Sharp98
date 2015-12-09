@@ -105,13 +105,34 @@ namespace Sharp98.S98
         {
             if (encoding == null)
                 throw new ArgumentNullException(nameof(encoding));
-
+            
             int requireLength = this.GetBufferOutputSize(encoding);
             var buffer = new byte[requireLength];
             this.ExportBuffer(buffer, 0, encoding);
             return buffer;
         }
+        
+        public int Export(byte[] buffer, int index, int length, Encoding encoding)
+        {
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
 
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
+
+            int requireLength = this.GetBufferOutputSize(encoding);
+
+            if (index < 0 || buffer.Length < index + requireLength)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            if (length < requireLength)
+                throw new ArgumentOutOfRangeException(nameof(length), $"バッファの長さが足りません。少なくとも {requireLength} の長さが必要です。");
+            
+            this.ExportBuffer(buffer, index, encoding);
+
+            return requireLength;
+        }
+        
         public void Export(Stream stream, Encoding encoding)
         {
             if (stream == null)

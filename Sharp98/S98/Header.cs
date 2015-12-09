@@ -33,7 +33,7 @@ using System.Text;
 
 namespace Sharp98.S98
 {
-    public class Header : IFileHeader
+    public class Header : IFormatHeader
     {
         #region -- Private Static Fields --
 
@@ -59,7 +59,7 @@ namespace Sharp98.S98
 
         #region -- Public Properties --
 
-        public FileType FileType => FileType.S98;
+        public FormatType FormatType => FormatType.S98;
 
         public int SampleTimeNumerator { get; private set; }
 
@@ -88,6 +88,8 @@ namespace Sharp98.S98
 
         public IReadOnlyList<IDeviceInfo> Devices => new CastedReadOnlyList<DeviceInfo, IDeviceInfo>(this.s98Devices);
         
+        public Version Version => new Version(3, 0);
+
         #endregion
 
         #region -- Constructors --
@@ -130,9 +132,13 @@ namespace Sharp98.S98
 
         #region -- Public Methods --
 
-        public void Export(Stream stream)
+        public void Export(string filepath, Encoding encoding)
         {
-            this.Export(stream, null);
+            if (filepath == null)
+                throw new ArgumentNullException(nameof(filepath));
+
+            using (var fs = new FileStream(filepath, FileMode.Create))
+                this.Export(fs, encoding);
         }
 
         public void Export(Stream stream, Encoding encoding)
@@ -259,7 +265,7 @@ namespace Sharp98.S98
             stream.Write(buffer, 0, 32);
         }
 
-        private static bool CheckMagicAndVersion(byte[] buffer, int index = 0)
+        private static bool CheckMagicAndVersion(byte[] buffer, int index)
         {
             // magic
             for (int i = 0; i < magicNumber.Length; i++)
@@ -359,7 +365,7 @@ namespace Sharp98.S98
 
             foreach (var device in this.s98Devices)
             {
-                device.Export(buffer);
+                device.Export(buffer, 0, 16, null);
                 stream.Write(buffer, 0, 16);
             }
         }
@@ -377,7 +383,7 @@ namespace Sharp98.S98
                 if (this.LoopPointIndex == dumpCount)
                     loopPosition = stream.Position;
 
-                int dumpLength = dump.Export(buffer);
+                int dumpLength = dump.Export(buffer, 0, 16, null);
                 stream.Write(buffer, 0, dumpLength);
 
                 dumpCount++;
@@ -386,9 +392,6 @@ namespace Sharp98.S98
 
         private void ExportTag(Stream stream, Encoding encoding)
         {
-            if (encoding == null)
-                this.s98TagCollection.Export(stream);
-            else
                 this.s98TagCollection.Export(stream, encoding);
         }
 

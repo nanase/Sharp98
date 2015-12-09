@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Sharp98.S98
@@ -105,11 +106,10 @@ namespace Sharp98.S98
             if (encoding == null)
                 throw new ArgumentNullException(nameof(encoding));
 
-            using (MemoryStream ms = new MemoryStream())
-            {
-                this.Export(ms, encoding);
-                return ms.ToArray();
-            }
+            int requireLength = this.GetBufferOutputSize(encoding);
+            var buffer = new byte[requireLength];
+            this.ExportBuffer(buffer, 0, encoding);
+            return buffer;
         }
 
         public void Export(Stream stream)
@@ -143,6 +143,35 @@ namespace Sharp98.S98
         #endregion
 
         #region -- Private Methods --
+
+        private int GetBufferOutputSize(Encoding encoding)
+        {
+            int count = this.Sum(p => encoding.GetByteCount(p.Key) + encoding.GetByteCount(p.Value) + 3);
+
+            if (encoding == Encoding.UTF8)
+                count += preamble.Length;
+
+            return count + marker.Length;
+        }
+
+        private void ExportBuffer(byte[] buffer, int index, Encoding encoding)
+        {
+            Array.Copy(marker, 0, buffer, index, marker.Length);
+            index += marker.Length;
+
+            if (encoding == Encoding.UTF8)
+            {
+                Array.Copy(preamble, 0, buffer, index, preamble.Length);
+                index += preamble.Length;
+            }
+
+            foreach (var item in this)
+            {
+                var str = string.Format("{0}={1}\n\0", item.Key.ToLower(), item.Value);
+                var strLength = encoding.GetBytes(str, 0, str.Length, buffer, index);
+                index += strLength;
+            }
+        }
 
         private void Import(byte[] import, Encoding encoding, int index)
         {

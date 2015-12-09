@@ -100,11 +100,6 @@ namespace Sharp98.S98
             base.Add(key.ToLower(), value);
         }
 
-        public byte[] Export()
-        {
-            return this.Export(Encoding.UTF8);
-        }
-
         public byte[] Export(Encoding encoding)
         {
             if (encoding == null)

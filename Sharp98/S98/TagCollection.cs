@@ -112,11 +112,6 @@ namespace Sharp98.S98
             return buffer;
         }
 
-        public void Export(Stream stream)
-        {
-            this.Export(stream, Encoding.UTF8);
-        }
-
         public void Export(Stream stream, Encoding encoding)
         {
             if (stream == null)

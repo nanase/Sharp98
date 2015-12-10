@@ -87,7 +87,7 @@ namespace Sharp98.S98
         public ITagCollection TagCollection => this.s98TagCollection;
 
         public IReadOnlyList<IDeviceInfo> Devices => new CastedReadOnlyList<DeviceInfo, IDeviceInfo>(this.s98Devices);
-        
+
         public Version Version => new Version(3, 0);
 
         #endregion
@@ -154,6 +154,9 @@ namespace Sharp98.S98
 
             if (this.s98Devices.Count > 64)
                 throw new InvalidOperationException("デバイス数は 64 個以下である必要があります.");
+
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
 
             long basePosition = stream.Position;
             long loopPosition, tagPosition;
@@ -392,7 +395,7 @@ namespace Sharp98.S98
 
         private void ExportTag(Stream stream, Encoding encoding)
         {
-                this.s98TagCollection.Export(stream, encoding);
+            this.s98TagCollection.Export(stream, encoding);
         }
 
         #endregion

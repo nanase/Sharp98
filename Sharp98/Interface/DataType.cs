@@ -37,6 +37,6 @@ namespace Sharp98
         AddressAndData,
         EndMarker,
         DataMarker,
-        DataStream,
+        DataStreamControl,
     }
 }

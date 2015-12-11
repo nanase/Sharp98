@@ -51,6 +51,8 @@ namespace Sharp98
 
         IReadOnlyList<IDeviceInfo> Devices { get; }
 
+        IReadOnlyList<IDumpData> DumpData { get; }
+
         #endregion
     }
 }

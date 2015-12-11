@@ -84,7 +84,7 @@ namespace Sharp98.S98
             get
             {
                 if (this.op < 64)
-                    return new AddressAndData(this.address, this.data);
+                    return new AddressAndData(this.address + (this.op % 2 == 1 ? 0x100 : 0), this.data);
                 else if (this.op == 0xff)
                     return 1;
                 else if (this.op == 0xfe)

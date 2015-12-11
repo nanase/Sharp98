@@ -59,6 +59,7 @@
     <Compile Include="S98\DeviceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="S98\TagCollection.cs" />
+    <Compile Include="VGM\DeviceType.cs" />
     <Compile Include="VGM\DeviceTypeConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

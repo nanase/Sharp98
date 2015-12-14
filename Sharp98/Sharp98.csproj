@@ -61,6 +61,7 @@
     <Compile Include="S98\TagCollection.cs" />
     <Compile Include="VGM\DeviceType.cs" />
     <Compile Include="VGM\DeviceTypeConverter.cs" />
+    <Compile Include="VGM\TagCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

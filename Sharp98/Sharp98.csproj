@@ -59,6 +59,7 @@
     <Compile Include="S98\DeviceType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="S98\TagCollection.cs" />
+    <Compile Include="VGM\DeviceInfo.cs" />
     <Compile Include="VGM\DeviceType.cs" />
     <Compile Include="VGM\DeviceTypeConverter.cs" />
     <Compile Include="VGM\TagCollection.cs" />

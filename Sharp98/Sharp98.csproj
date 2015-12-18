@@ -64,6 +64,7 @@
     <Compile Include="VGM\DeviceType.cs" />
     <Compile Include="VGM\DeviceTypeConverter.cs" />
     <Compile Include="VGM\DumpData.cs" />
+    <Compile Include="VGM\Header.cs" />
     <Compile Include="VGM\TagCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

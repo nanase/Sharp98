@@ -36,6 +36,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataParameter\DataBlock.cs" />
     <Compile Include="DataParameter\PortAddressAndData.cs" />
     <Compile Include="DataParameter\ChannelAndAddress.cs" />
     <Compile Include="DataParameter\AddressAndData.cs" />

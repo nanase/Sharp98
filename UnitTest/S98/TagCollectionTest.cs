@@ -22,7 +22,7 @@ namespace UnitTest
             tag_base.Add("title", "foo");
             tag_base.Add("name", "bar");
 
-            var tag_buffer = tag_base.Export();
+            var tag_buffer = tag_base.Export(Encoding.UTF8);
             var new_tag = new TagCollection(tag_buffer);
             Assert.AreEqual(2, new_tag.Count);
             Assert.AreEqual("foo", new_tag["title"]);

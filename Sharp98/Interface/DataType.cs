@@ -28,15 +28,49 @@
 
 namespace Sharp98
 {
+    /// <summary>
+    /// ダンプデータの種別を表す列挙体です。
+    /// </summary>
     public enum DataType
     {
+        /// <summary>
+        /// 不明。
+        /// </summary>
         Unknown,
+
+        /// <summary>
+        /// ウェイト。
+        /// </summary>
         Wait,
+
+        /// <summary>
+        /// アドレスのみ。
+        /// </summary>
         AddressOnly,
+
+        /// <summary>
+        /// データのみ。
+        /// </summary>
         DataOnly,
+
+        /// <summary>
+        /// アドレスとデータのセット。
+        /// </summary>
         AddressAndData,
+
+        /// <summary>
+        /// ダンプデータの終わりを表すマーカ。
+        /// </summary>
         EndMarker,
+
+        /// <summary>
+        /// 何らかの始まりを表すマーカ。
+        /// </summary>
         DataMarker,
+
+        /// <summary>
+        /// データストリームコントロールの開始。
+        /// </summary>
         DataStreamControl,
     }
 }

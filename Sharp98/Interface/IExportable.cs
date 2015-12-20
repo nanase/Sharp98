@@ -31,10 +31,18 @@ using System.Text;
 
 namespace Sharp98
 {
+    /// <summary>
+    /// オブジェクトをストリームにエクスポートするためのインタフェースです。
+    /// </summary>
     public interface IExportable
     {
         #region -- Methods --
 
+        /// <summary>
+        /// オブジェクトを指定されたストリームにエクスポートします。
+        /// </summary>
+        /// <param name="stream">エクスポート先の書き込み可能なストリーム。</param>
+        /// <param name="encoding">文字列のエンコード。実装クラスによっては使用されません。</param>
         void Export(Stream stream, Encoding encoding);
 
         #endregion

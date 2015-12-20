@@ -28,11 +28,24 @@
 
 namespace Sharp98
 {
+    /// <summary>
+    /// フォーマットの種別を表す列挙体です。
+    /// </summary>
     public enum FormatType
     {
+        /// <summary>
+        /// 不明な形式。
+        /// </summary>
         Unknown,
 
+        /// <summary>
+        /// VGMフォーマット。
+        /// </summary>
         VGM,
+
+        /// <summary>
+        /// S98フォーマット。
+        /// </summary>
         S98,
     }
 }

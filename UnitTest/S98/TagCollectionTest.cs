@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Sharp98.S98;
 
-namespace UnitTest
+namespace UnitTest.S98
 {
     [TestClass]
     public class TagCollectionTest

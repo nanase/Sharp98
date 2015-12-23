@@ -272,8 +272,9 @@ namespace Sharp98.S98
 
         private static bool IsEncodedByUTF8(byte[] import)
         {
-            if (import.Length < marker.Length + preamble.Length)
-                return false;
+            // this condition is always evaluated as "false"
+            // if (import.Length < marker.Length + preamble.Length)
+            //    return false;
 
             for (int i = marker.Length, j = 0; j < preamble.Length; i++, j++)
                 if (import[i] != preamble[j])

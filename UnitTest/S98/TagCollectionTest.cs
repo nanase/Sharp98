@@ -80,6 +80,71 @@ namespace UnitTest.S98
         }
 
         [TestMethod]
+        public void ConstructorTest6()
+        {
+            var tag_base = new TagCollection();
+            tag_base.Add("title", "foo");
+            tag_base.Add("name", "bar");
+            var buffer = tag_base.Export(Encoding.UTF8);
+
+            var new_tag = new TagCollection(buffer);
+            Assert.AreEqual(2, new_tag.Count);
+            Assert.AreEqual("foo", new_tag["title"]);
+            Assert.AreEqual("bar", new_tag["name"]);
+        }
+
+        [TestMethod]
+        public void ConstructorTest7()
+        {
+            var tag_base = new TagCollection();
+            tag_base.Add("title", "foo");
+            tag_base.Add("name", "bar");
+            var buffer = tag_base.Export(Encoding.UTF8);
+
+            var new_tag = new TagCollection(buffer, Encoding.UTF8);
+            Assert.AreEqual(2, new_tag.Count);
+            Assert.AreEqual("foo", new_tag["title"]);
+            Assert.AreEqual("bar", new_tag["name"]);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ConstructorError1()
+        {
+            var tag_base = new TagCollection((byte[])null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ConstructorError2()
+        {
+            var tag_base = new TagCollection(new byte[0]);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ConstructorError3()
+        {
+            var tag_base = new TagCollection(new byte[10]);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidDataException))]
+        public void ConstructorError4()
+        {
+            const string testString = "[S98]\n\0";
+            var tag_base = new TagCollection(Encoding.ASCII.GetBytes(testString));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidDataException))]
+        public void ConstructorError5()
+        {
+            const string testString = "[S98]aaa=";
+            var tag_base = new TagCollection(Encoding.ASCII.GetBytes(testString));
+        }
+
+        [TestMethod]
         public void IndexerTest()
         {
             var tag_base = new TagCollection();

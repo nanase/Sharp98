@@ -36,21 +36,25 @@ namespace Sharp98.VGM
 {
     public class TagCollection : SortedDictionary<string, string>, ITagCollection
     {
+        #region -- Public Fields --
+
+        public readonly string KeyTrackNameEnglish = "00_TrackName_English";
+        public readonly string KeyTrackNameJapanese = "01_TrackName_Japanese";
+        public readonly string KeyGameNameEnglish = "02_GameName_English";
+        public readonly string KeyGameNameJapanese = "03_GameName_Japanese";
+        public readonly string KeySystemNameEnglish = "04_SystemName_English";
+        public readonly string KeySystemNameJapanese = "05_SystemName_Japanese";
+        public readonly string KeyOriginalTrackAuthorEnglish = "06_OriginalTrackAuthor_English";
+        public readonly string KeyOriginalTrackAuthorJapanese = "07_OriginalTrackAuthor_Japanese";
+        public readonly string KeyReleaseDate = "08_ReleaseDate";
+        public readonly string KeyPersonWhoConverted = "09_PersonWhoConverted";
+        public readonly string KeyNotes = "10_Notes";
+
+        #endregion
+
         #region -- Private Fields --
 
         private static readonly byte[] marker = new byte[] { 0x47, 0x64, 0x33, 0x20, 0x00, 0x01, 0x00, 0x00 };
-
-        private const string key_trackNameEnglish = "00_TrackName_English";
-        private const string key_trackNameJapanese = "01_TrackName_Japanese";
-        private const string key_gameNameEnglish = "02_GameName_English";
-        private const string key_gameNameJapanese = "03_GameName_Japanese";
-        private const string key_systemNameEnglish = "04_SystemName_English";
-        private const string key_systemNameJapanese = "05_SystemName_Japanese";
-        private const string key_originalTrackAuthorEnglish = "06_OriginalTrackAuthor_English";
-        private const string key_originalTrackAuthorJapanese = "07_OriginalTrackAuthor_Japanese";
-        private const string key_releaseDate = "08_ReleaseDate";
-        private const string key_personWhoConverted = "09_PersonWhoConverted";
-        private const string key_notes = "10_Notes";
 
         #endregion
 
@@ -71,68 +75,68 @@ namespace Sharp98.VGM
 
         public string TrackNameEnglish
         {
-            get { return this[key_trackNameEnglish]; }
-            set { this[key_trackNameEnglish] = value; }
+            get { return this[KeyTrackNameEnglish]; }
+            set { this[KeyTrackNameEnglish] = value; }
         }
 
         public string TrackNameJapanese
         {
-            get { return this[key_trackNameJapanese]; }
-            set { this[key_trackNameJapanese] = value; }
+            get { return this[KeyTrackNameJapanese]; }
+            set { this[KeyTrackNameJapanese] = value; }
         }
 
         public string GameNameEnglish
         {
-            get { return this[key_gameNameEnglish]; }
-            set { this[key_gameNameEnglish] = value; }
+            get { return this[KeyGameNameEnglish]; }
+            set { this[KeyGameNameEnglish] = value; }
         }
 
         public string GameNameJapanese
         {
-            get { return this[key_gameNameJapanese]; }
-            set { this[key_gameNameJapanese] = value; }
+            get { return this[KeyGameNameJapanese]; }
+            set { this[KeyGameNameJapanese] = value; }
         }
 
         public string SystemNameEnglish
         {
-            get { return this[key_systemNameEnglish]; }
-            set { this[key_systemNameEnglish] = value; }
+            get { return this[KeySystemNameEnglish]; }
+            set { this[KeySystemNameEnglish] = value; }
         }
 
         public string SystemNameJapanese
         {
-            get { return this[key_systemNameJapanese]; }
-            set { this[key_systemNameJapanese] = value; }
+            get { return this[KeySystemNameJapanese]; }
+            set { this[KeySystemNameJapanese] = value; }
         }
 
         public string OriginalTrackAuthorEnglish
         {
-            get { return this[key_originalTrackAuthorEnglish]; }
-            set { this[key_originalTrackAuthorEnglish] = value; }
+            get { return this[KeyOriginalTrackAuthorEnglish]; }
+            set { this[KeyOriginalTrackAuthorEnglish] = value; }
         }
 
         public string OriginalTrackAuthorJapanese
         {
-            get { return this[key_originalTrackAuthorJapanese]; }
-            set { this[key_originalTrackAuthorJapanese] = value; }
+            get { return this[KeyOriginalTrackAuthorJapanese]; }
+            set { this[KeyOriginalTrackAuthorJapanese] = value; }
         }
 
         public string ReleaseDate
         {
-            get { return this[key_releaseDate]; }
-            set { this[key_releaseDate] = value; }
+            get { return this[KeyReleaseDate]; }
+            set { this[KeyReleaseDate] = value; }
         }
 
         public string PersonWhoConverted
         {
-            get { return this[key_personWhoConverted]; }
-            set { this[key_personWhoConverted] = value; }
+            get { return this[KeyPersonWhoConverted]; }
+            set { this[KeyPersonWhoConverted] = value; }
         }
 
         public string Notes
         {
-            get { return this[key_notes]; }
-            set { this[key_notes] = value; }
+            get { return this[KeyNotes]; }
+            set { this[KeyNotes] = value; }
         }
 
         #endregion
@@ -215,17 +219,17 @@ namespace Sharp98.VGM
 
         private void AddDefaultKeys()
         {
-            base.Add(key_trackNameEnglish, string.Empty);
-            base.Add(key_trackNameJapanese, string.Empty);
-            base.Add(key_gameNameEnglish, string.Empty);
-            base.Add(key_gameNameJapanese, string.Empty);
-            base.Add(key_systemNameEnglish, string.Empty);
-            base.Add(key_systemNameJapanese, string.Empty);
-            base.Add(key_originalTrackAuthorEnglish, string.Empty);
-            base.Add(key_originalTrackAuthorJapanese, string.Empty);
-            base.Add(key_releaseDate, string.Empty);
-            base.Add(key_personWhoConverted, string.Empty);
-            base.Add(key_notes, string.Empty);
+            base.Add(KeyTrackNameEnglish, string.Empty);
+            base.Add(KeyTrackNameJapanese, string.Empty);
+            base.Add(KeyGameNameEnglish, string.Empty);
+            base.Add(KeyGameNameJapanese, string.Empty);
+            base.Add(KeySystemNameEnglish, string.Empty);
+            base.Add(KeySystemNameJapanese, string.Empty);
+            base.Add(KeyOriginalTrackAuthorEnglish, string.Empty);
+            base.Add(KeyOriginalTrackAuthorJapanese, string.Empty);
+            base.Add(KeyReleaseDate, string.Empty);
+            base.Add(KeyPersonWhoConverted, string.Empty);
+            base.Add(KeyNotes, string.Empty);
         }
 
         private void ImportFromArray(byte[] import, int index)
@@ -251,17 +255,17 @@ namespace Sharp98.VGM
                 }
             }
 
-            this[key_trackNameEnglish] = strs[0];
-            this[key_trackNameJapanese] = strs[1];
-            this[key_gameNameEnglish] = strs[2];
-            this[key_gameNameJapanese] = strs[3];
-            this[key_systemNameEnglish] = strs[4];
-            this[key_systemNameJapanese] = strs[5];
-            this[key_originalTrackAuthorEnglish] = strs[6];
-            this[key_originalTrackAuthorJapanese] = strs[7];
-            this[key_releaseDate] = strs[8];
-            this[key_personWhoConverted] = strs[9];
-            this[key_notes] = strs[10];
+            this[KeyTrackNameEnglish] = strs[0];
+            this[KeyTrackNameJapanese] = strs[1];
+            this[KeyGameNameEnglish] = strs[2];
+            this[KeyGameNameJapanese] = strs[3];
+            this[KeySystemNameEnglish] = strs[4];
+            this[KeySystemNameJapanese] = strs[5];
+            this[KeyOriginalTrackAuthorEnglish] = strs[6];
+            this[KeyOriginalTrackAuthorJapanese] = strs[7];
+            this[KeyReleaseDate] = strs[8];
+            this[KeyPersonWhoConverted] = strs[9];
+            this[KeyNotes] = strs[10];
         }
 
         private void CheckKeyValue(string key, string value)

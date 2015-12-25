@@ -108,6 +108,26 @@ namespace UnitTest.S98
         }
 
         [TestMethod]
+        public void ConstructorTest8()
+        {
+            const string testString1 = "[S98]title=foo\n\0name=bar\n\0";
+            const string testString2 = "[S98]title=foo\nname=bar\n";
+
+            var tag_base1 = new TagCollection(Encoding.ASCII.GetBytes(testString1));
+            var tag_base2 = new TagCollection(Encoding.ASCII.GetBytes(testString2));
+
+            Assert.AreEqual(2, tag_base1.Count);
+            Assert.AreEqual("foo", tag_base1["title"]);
+            Assert.AreEqual("bar", tag_base1["name"]);
+
+            Assert.AreEqual(2, tag_base2.Count);
+            Assert.AreEqual("foo", tag_base2["title"]);
+            Assert.AreEqual("bar", tag_base2["name"]);
+
+            CollectionAssert.AreEquivalent(tag_base1, tag_base2);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConstructorError1()
         {

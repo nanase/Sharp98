@@ -87,6 +87,9 @@ namespace Sharp98.S98
         public TagCollection(IDictionary<string, string> dictionary)
             : base(dictionary.Count)
         {
+            if (dictionary == null)
+                throw new ArgumentNullException(nameof(dictionary));
+
             foreach (var item in dictionary)
                 this.Add(item.Key, item.Value);
         }

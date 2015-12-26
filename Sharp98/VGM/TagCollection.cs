@@ -152,6 +152,9 @@ namespace Sharp98.VGM
         public TagCollection(IDictionary<string, string> dictionary)
             : this()
         {
+            if (dictionary == null)
+                throw new ArgumentNullException(nameof(dictionary));
+
             foreach (var item in dictionary)
                 this[item.Key] = item.Value;
         }

@@ -53,6 +53,7 @@
     <Compile Include="HeaderTest.cs" />
     <Compile Include="S98\TagCollectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VGM\TagCollectionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sharp98\Sharp98.csproj">

@@ -86,6 +86,41 @@ namespace UnitTest.S98
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Export2Error1()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            var size = device.Export(null, 0, 16, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Export2Error2()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            var buffer = new byte[16];
+            var size = device.Export(buffer, -1, 16, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Export2Error3()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            var buffer = new byte[16];
+            var size = device.Export(buffer, 16, 16, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Export2Error4()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            var buffer = new byte[16];
+            var size = device.Export(buffer, 0, 8, null);
+        }
+
+        [TestMethod]
         public void Export3Test()
         {
             var device = new DeviceInfo(s98type, clock, pan);

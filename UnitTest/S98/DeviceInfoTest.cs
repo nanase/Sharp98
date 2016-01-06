@@ -135,5 +135,26 @@ namespace UnitTest.S98
 
             Assert.AreEqual(16, buffer.Length);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Export3Error1()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            device.Export(null, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Export3Error2()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            byte[] buffer = new byte[16];
+
+            using (var ms = new MemoryStream(buffer, false))
+            {
+                device.Export(ms, null);
+            }
+        }
     }
 }

@@ -156,5 +156,43 @@ namespace UnitTest.S98
                 device.Export(ms, null);
             }
         }
+
+        [TestMethod]
+        public void Import1Test()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            byte[] buffer = device.Export(null);
+            var new_device = DeviceInfo.Import(buffer);
+
+            Assert.AreEqual(type, new_device.DeviceType);
+            Assert.AreEqual(clock, new_device.Clock);
+            Assert.AreEqual(pan, new_device.Pan);
+            Assert.AreEqual(s98type, new_device.S98DeviceType);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Import1Error1()
+        {
+            var new_device = DeviceInfo.Import(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Import1Error2()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            byte[] buffer = device.Export(null);
+            var new_device = DeviceInfo.Import(buffer, -1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Import1Error3()
+        {
+            var device = new DeviceInfo(s98type, clock, pan);
+            byte[] buffer = device.Export(null);
+            var new_device = DeviceInfo.Import(buffer, 16);
+        }
     }
 }

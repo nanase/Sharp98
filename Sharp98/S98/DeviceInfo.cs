@@ -138,7 +138,7 @@ namespace Sharp98.S98
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
 
-            if (index < 0 || buffer.Length <= index + 16)
+            if (index < 0 || buffer.Length < index + 16)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
             return new DeviceInfo(
